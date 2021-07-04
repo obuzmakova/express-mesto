@@ -60,7 +60,7 @@ module.exports.likeCard = (req, res) => {
       if (err.name === 'CastError') {
         res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
       } else if (err.message === 'NotValidCardId') {
-        res.status(ERROR_DATA).send({ message: 'Карточка с указанным _id не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
       }
@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res) => {
       if (err.name === 'CastError') {
         res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
       } else if (err.message === 'NotValidCardId') {
-        res.status(ERROR_DATA).send({ message: 'Карточка с указанным _id не найдена' });
+        res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
       }

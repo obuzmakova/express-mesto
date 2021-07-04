@@ -60,7 +60,7 @@ module.exports.updateProfile = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
-      } else if (err.message === 'NotValidCardId') {
+      } else if (err.message === 'NotValidRequest') {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
@@ -72,13 +72,14 @@ module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .orFail(new Error('NotValidRequest'))
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
-      } else if (err.message === 'NotValidCardId') {
+      } else if (err.message === 'NotValidRequest') {
         res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден' });
       } else {
         res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
