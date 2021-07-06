@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 const SUCCESS_STATUS = 200;
 const ERROR_DATA = 400;
@@ -38,9 +39,10 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email } = req.body;
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(req.body.password, 10)
+    .then(hash => User.create({ name, about, avatar, email, password: hash }))
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
