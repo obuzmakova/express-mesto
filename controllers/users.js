@@ -1,10 +1,43 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const SUCCESS_STATUS = 200;
 const ERROR_DATA = 400;
+const AUTH_ERROR = 401;
 const NOT_FOUND = 404;
 const SERVER_ERROR = 500;
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d'});
+      res.cookie('jwt', token, {
+        maxAge: 604800000,
+        httpOnly: true
+      })
+      // res.status(SUCCESS_STATUS).send(user);
+    })
+    .catch((err) => {
+        res.status(AUTH_ERROR).send({ message: err.message });
+    })
+};
+
+module.exports.getProfileInfo = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      res.status(SUCCESS_STATUS).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_DATA).send({ message: 'Передан невалидный id' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      }
+    });
+};
 
 module.exports.getUsers = (req, res) => {
   User.find({})
