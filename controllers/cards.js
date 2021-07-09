@@ -25,7 +25,12 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => {
       res.status(SUCCESS_STATUS).send(card);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        throw new DataErr ('Переданы некорректные данные');
+      }
+    })
+    .catch(next)
 };
 
 module.exports.deleteCard = (req, res, next) => {

@@ -68,6 +68,11 @@ module.exports.createUser = (req, res, next) => {
     .then(hash => User.create({ name, about, avatar, email, password: hash
     }))
     .then((user) => res.status(SUCCESS_STATUS).send(user))
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        throw new DataErr ('Переданы некорректные данные');
+      }
+    })
     .catch(next)
 };
 
@@ -80,7 +85,7 @@ module.exports.updateProfile = (req, res, next) => {
       res.status(SUCCESS_STATUS).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError'|| err.name === 'ValidationError') {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidRequest') {
         throw new NotFoundErr ('Пользователь с указанным _id не найден');
@@ -98,7 +103,7 @@ module.exports.updateAvatar = (req, res, next) => {
       res.status(SUCCESS_STATUS).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError'|| err.name === 'ValidationError') {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidRequest') {
         throw new NotFoundErr ('Пользователь с указанным _id не найден');
