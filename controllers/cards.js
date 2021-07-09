@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const DataErr = require('../errors/data-err');
 const NotFoundErr = require('../errors/not-found');
+const ServerErr = require('../errors/server-err');
 
 const SUCCESS_STATUS = 200;
 
@@ -13,6 +14,8 @@ module.exports.getCards = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NotValidRequest') {
         throw new DataErr ('Переданы некорректные данные');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next);
@@ -28,6 +31,8 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         throw new DataErr ('Переданы некорректные данные');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -44,6 +49,8 @@ module.exports.deleteCard = (req, res, next) => {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidCardId') {
         throw new NotFoundErr ('Карточка с указанным _id не найдена');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next);
@@ -61,6 +68,8 @@ module.exports.likeCard = (req, res, next) => {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidCardId') {
         throw new NotFoundErr ('Карточка с указанным _id не найдена');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next);
@@ -78,6 +87,8 @@ module.exports.dislikeCard = (req, res, next) => {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidCardId') {
         throw new NotFoundErr ('Карточка с указанным _id не найдена');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next);

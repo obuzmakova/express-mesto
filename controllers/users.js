@@ -2,8 +2,8 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const DataErr = require('../errors/data-err');
-const AuthErr = require('../errors/auth-err');
 const NotFoundErr = require('../errors/not-found');
+const ServerErr = require('../errors/server-err');
 
 const SUCCESS_STATUS = 200;
 
@@ -26,6 +26,8 @@ module.exports.getProfileInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new DataErr ('Передан невалидный id');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -40,6 +42,8 @@ module.exports.getUsers = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NotValidRequest') {
         throw new DataErr ('Переданы некорректные данные');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -56,6 +60,8 @@ module.exports.getUser = (req, res, next) => {
         throw new NotFoundErr ('Пользователь с указанным _id не найден');
       } else if (err.name === 'CastError') {
         throw new DataErr ('Передан невалидный id');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -67,10 +73,13 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => User.create({ name, about, avatar, email, password: hash
     }))
-    .then((user) => res.status(SUCCESS_STATUS).send(user))
+    .then((user) => res.status(SUCCESS_STATUS).send({ name: user.name, about: user.about, avatar: user.avatar, email:user.email }))
     .catch((err) => {
+      console.log(err.name);
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         throw new DataErr ('Переданы некорректные данные');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -89,6 +98,8 @@ module.exports.updateProfile = (req, res, next) => {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidRequest') {
         throw new NotFoundErr ('Пользователь с указанным _id не найден');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
@@ -107,6 +118,8 @@ module.exports.updateAvatar = (req, res, next) => {
         throw new DataErr ('Переданы некорректные данные');
       } else if (err.message === 'NotValidRequest') {
         throw new NotFoundErr ('Пользователь с указанным _id не найден');
+      } else {
+        throw new ServerErr('На сервере произошла ошибка');
       }
     })
     .catch(next)
