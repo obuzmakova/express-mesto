@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,16 +23,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required()
-  })
+    password: Joi.string().required(),
+  }),
 }), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().max(30),
     avatar: Joi.string().required().uri(),
-    email: Joi.string().required().email()
-  })
+    email: Joi.string().required().email(),
+  }),
 }), createUser);
 
 app.use(auth);

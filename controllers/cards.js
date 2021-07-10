@@ -19,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => {
       res.status(SUCCESS_STATUS).send(card);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -30,7 +30,7 @@ module.exports.deleteCard = (req, res, next) => {
         card.deleteOne();
         res.status(SUCCESS_STATUS).send(card);
       } else {
-        throw new AccessErr ('Вы не имеете прав удалять чужие карточки');
+        throw new AccessErr('Вы не имеете прав удалять чужие карточки');
       }
     })
     .catch(next);

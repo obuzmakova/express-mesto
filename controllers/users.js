@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 const SUCCESS_STATUS = 200;
 
@@ -9,10 +9,10 @@ module.exports.login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d'});
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.getProfileInfo = (req, res, next) => {
@@ -20,7 +20,7 @@ module.exports.getProfileInfo = (req, res, next) => {
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -29,7 +29,7 @@ module.exports.getUsers = (req, res, next) => {
     .then((users) => {
       res.status(SUCCESS_STATUS).send(users);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.getUser = (req, res, next) => {
@@ -38,17 +38,22 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email } = req.body;
+  const {
+    name, about, avatar, email,
+  } = req.body;
 
   bcrypt.hash(req.body.password, 10)
-    .then(hash => User.create({ name, about, avatar, email, password: hash
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(SUCCESS_STATUS).send({ name: user.name, about: user.about, avatar: user.avatar, email:user.email }))
-    .catch(next)
+    .then((user) => res.status(SUCCESS_STATUS).send({
+      name: user.name, about: user.about, avatar: user.avatar, email: user.email,
+    }))
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -59,7 +64,7 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
-    .catch(next)
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -70,5 +75,5 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => {
       res.status(SUCCESS_STATUS).send(user);
     })
-    .catch(next)
+    .catch(next);
 };

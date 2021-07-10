@@ -2,18 +2,18 @@ const ERROR_DATA = 400;
 const NOT_FOUND = 404;
 const DOUBLE_EMAIL = 409;
 
-module.exports = (err, req, res, next)  => {
-    if (err.name === 'CastError' || err.message === 'NotValidRequest') {
-      return res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
-    } else if (err.message === 'NotValidCardId') {
-      return res.status(NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
-    } else if (err.message === 'NotValidId') {
-      return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
-    } else if (err.name === "MongoError" && err.code === 11000) {
-      return res.status(DOUBLE_EMAIL).send({ message: 'Пользователь с таким адресом уже существует' });
-    } else if (err.statusCode) {
-      res.status(err.statusCode).send({message: err.message});
-    } else {
+module.exports = (err, req, res, next) => {
+  if (err.name === 'CastError' || err.message === 'NotValidRequest') {
+    res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
+  } else if (err.message === 'NotValidCardId') {
+    res.status(NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
+  } else if (err.message === 'NotValidId') {
+    res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
+  } else if (err.name === 'MongoError' && err.code === 11000) {
+    res.status(DOUBLE_EMAIL).send({ message: 'Пользователь с таким адресом уже существует' });
+  } else if (err.statusCode) {
+    res.status(err.statusCode).send({ message: err.message });
+  } else {
     const { statusCode = 500, message } = err;
 
     res
@@ -21,8 +21,8 @@ module.exports = (err, req, res, next)  => {
       .send({
         message: statusCode === 500
           ? 'На сервере произошла ошибка'
-          : message
+          : message,
       });
   }
   next();
-}
+};
