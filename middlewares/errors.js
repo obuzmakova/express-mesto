@@ -1,5 +1,6 @@
 const ERROR_DATA = 400;
 const NOT_FOUND = 404;
+const DOUBLE_EMAIL = 409;
 
 module.exports = (err, req, res, next)  => {
     if (err.name === 'CastError' || err.message === 'NotValidRequest') {
@@ -8,6 +9,8 @@ module.exports = (err, req, res, next)  => {
       return res.status(NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
     } else if (err.message === 'NotValidId') {
       return res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
+    } else if (err.name === "MongoError" && err.code === 11000) {
+      return res.status(DOUBLE_EMAIL).send({ message: 'Пользователь с таким адресом уже существует' });
     } else if (err.statusCode) {
       res.status(err.statusCode).send({message: err.message});
     } else {
