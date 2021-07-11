@@ -3,7 +3,9 @@ const NOT_FOUND = 404;
 const DOUBLE_EMAIL = 409;
 
 module.exports = (err, req, res, next) => {
-  if (err.name === 'CastError' || err.message === 'NotValidRequest') {
+  console.log(err.name);
+  console.log(err.statusCode);
+  if (err.name === 'CastError' || err.name === 'ValidationError' || err.message === 'NotValidRequest') {
     res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
   } else if (err.message === 'NotValidCardId') {
     res.status(NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
