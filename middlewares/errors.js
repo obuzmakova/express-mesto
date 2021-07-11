@@ -3,8 +3,6 @@ const NOT_FOUND = 404;
 const DOUBLE_EMAIL = 409;
 
 module.exports = (err, req, res, next) => {
-  console.log(err.name);
-  console.log(err.statusCode);
   if (err.name === 'CastError' || err.name === 'ValidationError' || err.message === 'NotValidRequest') {
     res.status(ERROR_DATA).send({ message: 'Переданы некорректные данные' });
   } else if (err.message === 'NotValidCardId') {
