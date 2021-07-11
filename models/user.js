@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator(v) {
-        validator.isEmail(v);
+        return validator.isEmail(v);
       },
     },
   },
