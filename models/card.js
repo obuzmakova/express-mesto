@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,6 +11,11 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator(v) {
+        return /(http|https):\/\/?[a-z0-9\-._~:/?#[\]@!$&'()*+,;=]+/gi.test(v);
+      },
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
