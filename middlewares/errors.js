@@ -9,6 +9,8 @@ module.exports = (err, req, res, next) => {
     res.status(NOT_FOUND).send({ message: 'Карточка с указанным id не найдена' });
   } else if (err.message === 'NotValidId') {
     res.status(NOT_FOUND).send({ message: 'Пользователь с указанным id не найден' });
+  } else if (err.message === 'RouteError') {
+    res.status(NOT_FOUND).send({ message: 'Запрашиваемый ресурс не найден' });
   } else if (err.name === 'MongoError' && err.code === 11000) {
     res.status(DOUBLE_EMAIL).send({ message: 'Пользователь с таким адресом уже существует' });
   } else if (err.statusCode) {

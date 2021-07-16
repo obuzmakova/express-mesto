@@ -61,15 +61,23 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().max(30),
+    about: Joi.string().max(30),
+    avatar: Joi.string(),
+  }),
+}), createUser);
 
 app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.get('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+app.get('*', (req, res, next) => {
+	next(new Error('RouteError'));
 });
 
 app.use(errorLogger);
