@@ -1,5 +1,5 @@
 require('dotenv').config();
-console.log(process.env.NODE_ENV);
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -75,7 +75,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.get('*', (req, res, next) => {
-	next(new Error('RouteError'));
+  next(new Error('RouteError'));
 });
 
 app.use(errorLogger);
