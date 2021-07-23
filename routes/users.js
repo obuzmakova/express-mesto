@@ -1,8 +1,16 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const {
   getUsers, getProfileInfo, getUser, updateProfile, updateAvatar,
 } = require('../controllers/users');
+
+const method = (value) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  throw new Error('URL validation err');
+};
 
 router.get('/', getUsers);
 
@@ -23,7 +31,7 @@ router.patch('/me', celebrate({
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().custom(method),
   }),
 }), updateAvatar);
 
